@@ -10,3 +10,4 @@ cloudinary_python.txt
 *sqllite3
 __pycache__
 *.pyc
+.venv
