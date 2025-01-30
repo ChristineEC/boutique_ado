@@ -11,3 +11,5 @@ cloudinary_python.txt
 __pycache__
 *.pyc
 .venv
+env
+env.py
