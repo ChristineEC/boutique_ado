@@ -50,7 +50,7 @@ def checkout(request):
                                 order=order,
                                 product=product,
                                 quantity=quantity,
-                                product_size=size, 
+                                product_size=size,
                             )
                             order_line_item.save()
                 except Product.DoesNotExist:
@@ -59,7 +59,7 @@ def checkout(request):
                         "Please call us for assistance!")
                     )
                     order.delete()
-                    return redirect(reverse('view_bag')) 
+                    return redirect(reverse('view_bag'))
             request.session['save_info'] = 'save-info' in request.POST
             return redirect(reverse('checkout_success', args=[order.order_number]))
         else:
@@ -97,7 +97,7 @@ def checkout(request):
 
 
 def checkout_success(request, order_number):
-    """"
+    """
     Handle successful checkouts
     """
     save_info = request.session.get('save_info')
