@@ -21,11 +21,11 @@ class StripeWH_Handler:
         """Send the user a confirmation email"""
         cust_email = order.email
         subject = render_to_string(
-            "scheckout/confirmation_emails/confirmation_email_subect.txt",
+            "checkout/confirmation_emails/confirmation_email_subect.txt",
             {"order": order},
         )
         body = render_to_string(
-            "scheckout/confirmation_emails/confirmation_email_body.txt",
+            "checkout/confirmation_emails/confirmation_email_body.txt",
             {"order": order, "contact_email": settings.DEFAULT_FROM_EMAIL},
         )
         send_mail(subject, body, settings.DEFAULT_FROM_EMAIL, [cust_email])
@@ -158,7 +158,7 @@ class StripeWH_Handler:
         )
 
     def handle_payment_intent_payment_failed(self, event):
-        """
+        """ 
         Handle the payment_intent.payment_failed webbook from Stripe
         """
         return HttpResponse(
