@@ -22,12 +22,10 @@ class StripeWH_Handler:
         cust_email = order.email
         subject = render_to_string(
             "checkout/confirmation_emails/confirmation_email_subect.txt",
-            {"order": order},
-        )
+            {"order": order})
         body = render_to_string(
             "checkout/confirmation_emails/confirmation_email_body.txt",
-            {"order": order, "contact_email": settings.DEFAULT_FROM_EMAIL},
-        )
+            {"order": order, "contact_email": settings.DEFAULT_FROM_EMAIL})
         send_mail(subject, body, settings.DEFAULT_FROM_EMAIL, [cust_email])
 
     def handle_event(self, event):
@@ -35,8 +33,7 @@ class StripeWH_Handler:
         Handle a generic/unknown/unexpected webbook event
         """
         return HttpResponse(
-            content=f"Unhandled webhook received: {event['type']}", status=200
-        )
+            content=f"Unhandled webhook received: {event['type']}", status=200)
 
     def handle_payment_intent_succeeded(self, event):
         """
@@ -67,12 +64,8 @@ class StripeWH_Handler:
                 profile.default_country = shipping_details.address.country
                 profile.default_postcode = shipping_details.address.postal_code
                 profile.default_town_or_city = shipping_details.address.city
-                profile.default_street_address1 = (
-                    shipping_details.address.line1
-                )
-                profile.default_street_address2 = (
-                    shipping_details.address.line2
-                )
+                profile.default_street_address1 = shipping_details.address.line1
+                profile.default_street_address2 = shipping_details.address.line2
                 profile.default_county = shipping_details.address.state
                 profile.save()
 
