@@ -24,13 +24,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', '')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = 'DEVELOPMENT' in os.environ
-DEBUG = True
+DEBUG = 'DEVELOPMENT' in os.environ
+
 
 
 ALLOWED_HOSTS = ["127.0.0.1", "boutiqueadocec-86ad819bf9fa.herokuapp.com"]
 
-# Application definition
+CSRF_TRUSTED_ORIGINS = [
+    'http://127.0.0.1:8000/',
+    'https://boutiqueadocec-86ad819bf9fa.herokuapp.com/',
+]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
