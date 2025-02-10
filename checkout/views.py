@@ -25,14 +25,15 @@ def cache_checkout_data(request):
                 "bag": json.dumps(request.session.get("bag", {})),
                 "save_info": request.POST.get("save_info"),
                 "username": request.user,
-            }
+            },
         )
         return HttpResponse(status=200)
     except Exception as e:
         messages.error(
             request,
             "Sorry, your payment cannot be \
-                processed right now. Please try again later.")
+                processed right now. Please try again later.",
+        )
         return HttpResponse(content=e, status=400)
 
 
@@ -84,9 +85,12 @@ def checkout(request):
                             )
                             order_line_item.save()
                 except Product.DoesNotExist:
-                    messages.error(request, (
+                    messages.error(
+                        request,
+                        (
                             "One of the products in your bag wasn't found"
-                            "in our database. Please call us for assistance!")
+                            "in our database. Please call us for assistance!"
+                        ),
                     )
                     order.delete()
                     return redirect(reverse("view_bag"))
@@ -94,8 +98,11 @@ def checkout(request):
             request.session["save_info"] = "save-info" in request.POST
             return redirect(reverse("checkout_success", args=[order.order_number]))
         else:
-            messages.error(request, "There was an error with your form. \
-                           Please double check your information.")
+            messages.error(
+                request,
+                "There was an error with your form. \
+                           Please double check your information.",
+            )
     else:
         bag = request.session.get("bag", {})
         if not bag:
@@ -109,12 +116,14 @@ def checkout(request):
         intent = stripe.PaymentIntent.create(
             amount=stripe_total,
             currency=settings.STRIPE_CURRENCY,
+            receipt_email = "pxe50zgd@students.codeinstitute.net"
         )
         # Attempt to prefill the form with any info the user maintains in their profile
         if request.user.is_authenticated:
             try:
                 profile = UserProfile.objects.get(user=request.user)
-                order_form = OrderForm(initial={
+                order_form = OrderForm(
+                    initial={
                         "full_name": profile.user.get_full_name(),
                         "email": profile.user.email,
                         "phone_number": profile.default_phone_number,
@@ -124,17 +133,20 @@ def checkout(request):
                         "street_address1": profile.default_street_address1,
                         "street_address2": profile.default_street_address2,
                         "county": profile.default_county,
-                    })
+                    }
+                )
             except UserProfile.DoesNotExist:
                 order_form = OrderForm()
         else:
             order_form = OrderForm()
 
     if not stripe_public_key:
-        messages.warning(request,
-                         "Stripe public key is missing. \
+        messages.warning(
+            request,
+            "Stripe public key is missing. \
                          Did you forget to set it in your \
-                         environment?")
+                         environment?",
+        )
 
     template = "checkout/checkout.html"
     context = {
@@ -174,9 +186,12 @@ def checkout_success(request, order_number):
             if user_profile_form.is_valid():
                 user_profile_form.save()
 
-    messages.success(request, f"Order successfully processed! \
+    messages.success(
+        request,
+        f"Order successfully processed! \
         Your order number is {order_number}. A confirmation \
-        email will be sent to {order.email}.")
+        email will be sent to {order.email}.",
+    )
 
     if "bag" in request.session:
         del request.session["bag"]
