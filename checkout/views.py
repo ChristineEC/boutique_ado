@@ -60,6 +60,7 @@ def checkout(request):
             order = order_form.save(commit=False)
             pid = request.POST.get("client_secret").split("_secret")[0]
             order.stripe_pid = pid
+            # order.receipt_email = "carterchristinee@gmail.com"
             order.orginal_bag = json.dumps(bag)
             order.save()
             # iterate through the bag items to create each line item
@@ -106,7 +107,8 @@ def checkout(request):
     else:
         bag = request.session.get("bag", {})
         if not bag:
-            messages.error(request, "There is nothing in your bag at the moment")
+            messages.error(request, "There is nothing in your bag at \
+                the moment")
             return redirect(reverse("products"))
 
         current_bag = bag_contents(request)
@@ -116,7 +118,6 @@ def checkout(request):
         intent = stripe.PaymentIntent.create(
             amount=stripe_total,
             currency=settings.STRIPE_CURRENCY,
-            receipt_email = "pxe50zgd@students.codeinstitute.net"
         )
         # Attempt to prefill the form with any info the user maintains in their profile
         if request.user.is_authenticated:
