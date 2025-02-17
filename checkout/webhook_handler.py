@@ -7,6 +7,7 @@ from .models import Order, OrderLineItem
 from products.models import Product
 from profiles.models import UserProfile
 
+import stripe
 import json
 import time
 
@@ -159,4 +160,5 @@ class StripeWH_Handler:
         Handle the payment_intent.payment_failed
         webhook from Stripe
         """
-        return HttpResponse(content=f"Webhook received: {event['type']}", status=200)
+        return HttpResponse(content=f"Webhook received: \
+                            {event['type']}", status=200)
